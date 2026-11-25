@@ -1,37 +1,33 @@
 
 class Temperature:
-    """Represents Celsius temperature."""
+    ABSOLUTE_ZERO_C = -273.15
 
-    def __init__(self, celsius=0):
-        """Initializes temperature."""
+    def __init__(self, celsius: float):
+        if not self.is_valid(celsius):
+            raise ValueError("Температура нижча за абсолютний нуль (-273.15°C)")
         self.celsius = celsius
 
     @classmethod
-    def from_fahrenheit(cls, f):
-        """Converts Fahrenheit to Celsius."""
-        return cls((f - 32) * 5 / 9)
+    def from_fahrenheit(cls, f: float) -> "Temperature":
+        c = (f - 32) * 5 / 9
+        return cls(c)
 
     @classmethod
-    def from_kelvin(cls, k):
-        """Converts Kelvin to Celsius."""
-        if k < 0:
-            raise ValueError("Invalid Kelvin")
-        return cls(k - 273.15)
+    def from_kelvin(cls, k: float) -> "Temperature":
+        c = k - 273.15
+        return cls(c)
 
-    def to_fahrenheit(self):
-        """Converts Celsius to Fahrenheit."""
+    def to_fahrenheit(self) -> float:
         return self.celsius * 9 / 5 + 32
 
     @staticmethod
-    def is_valid(c):
-        """Checks valid Celsius temperature."""
-        return c >= -273.15
+    def is_valid(c: float) -> bool:
+        return c >= Temperature.ABSOLUTE_ZERO_C
 
-t1, t2, t3 = Temperature(), Temperature.from_fahrenheit(32), Temperature.from_kelvin(300)
-print(t1.celsius)
-print(t2.celsius)
-print(t3.celsius)
 
-assert t1.celsius == 0
-assert t2.to_fahrenheit() == 32
-assert not Temperature.is_valid(-300)
+# Приклад використання
+t1 = Temperature(25)
+t2 = Temperature.from_fahrenheit(77)
+t3 = Temperature.from_kelvin(300)
+print(round(t1.to_fahrenheit(), 2), round(t2.celsius, 2), round(t3.celsius, 2))
+print(Temperature.is_valid(-300))  # False
